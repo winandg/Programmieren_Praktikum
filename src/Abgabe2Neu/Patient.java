@@ -1,6 +1,6 @@
 package Abgabe2Neu;
 
-public class Patient extends Person{
+public class Patient extends Person {
     public boolean istGesetzlichVersichert;
     public int patientenID;
 

@@ -5,13 +5,13 @@ import java.util.ArrayList;
 public class Zimmer {
 
     ArrayList<Patient> patient;
-    ArrayList<Angestellter>angestellter;
+    ArrayList<Angestellter> angestellter;
 
-    int anzahlFreieBetten;
+    final int anzahlBetten;
     int zimmerNummer;
 
     public Zimmer(int anzahlBetten, int nummer) {
-        anzahlFreieBetten = anzahlBetten;
+        this.anzahlBetten = anzahlBetten;
         this.zimmerNummer = nummer;
     }
 }

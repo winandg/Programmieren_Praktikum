@@ -20,48 +20,44 @@ public class Zeitkonto {
         volleStunde = Math.floor(AnzahlderMinuten / 60);
         verbleibendeMinuten = (AnzahlderMinuten % 60);
         if (verbleibendeMinuten < 1)
-            return "Stunden: " + volleStunde + "Minuten: " + verbleibendeMinuten;
-        else return "Stunden: " + volleStunde + "Minuten" + verbleibendeMinuten;
+            return "Stunden: " + volleStunde;
+        else return "Stunden: " + volleStunde + "Minuten: " + verbleibendeMinuten;
     }
 
 
     int offeneZeit() {
         int verbleibendeZeit = sollzeit - istzeit;
-        if(verbleibendeZeit > 0){
-            minToStunde(verbleibendeZeit);
-            System.out.println("Sieh haben noch nich lang genug gearbeitet!");
+        if (verbleibendeZeit > 0) {
+            System.out.println("Sie müssen noch " + minToStunde(verbleibendeZeit) + "arbeiten!");
             return verbleibendeZeit;
-        }else if(verbleibendeZeit<0){
-            minToStunde(verbleibendeZeit);
-            System.out.println("Sie haben bereits länger gearbeitet als sie mmüssten.");
+        } else if (verbleibendeZeit < 0) {
+            System.out.println("Sie haben bereits " + minToStunde(Math.abs(verbleibendeZeit)) + " zu viel gearbeitet");
             return verbleibendeZeit;
-        }else if(verbleibendeZeit == 0){
-            minToStunde(verbleibendeZeit);
-            System.out.println("Sie haben ihre Sollzeit erfüllt.");
+        } else if (verbleibendeZeit == 0) {
+            System.out.println("Sie haben ihre Sollzeit exakt erfüllt.");
             return verbleibendeZeit;
         }
         return verbleibendeZeit;
     }
 
 
-    void sollZeitAendern(int zeit,boolean addSub) {
-        if (addSub == false){
-            istzeit -= zeit;
-            System.out.println("Die Istzeit beträgt nun: " + minToStunde(sollzeit));
+    void sollZeitAendern(int zeit, boolean addSub) {
+        if (addSub == false) {
+            sollzeit -= zeit;
+            System.out.println("Die Sollzeit beträgt nun: " + minToStunde(sollzeit));
         }
-        if (addSub == true){
-            istzeit += zeit;
-            System.out.println("Die Istzeit beträgt nun: " + minToStunde(sollzeit));
+        if (addSub == true) {
+            sollzeit += zeit;
+            System.out.println("Die Sollzeit beträgt nun: " + minToStunde(sollzeit));
         }
     }
 
-    void istZeitAendern(int zeit,boolean addSub) {
-
-        if (addSub == false){
+    void istZeitAendern(int zeit, boolean addSub) {
+        if (addSub == false) {
             istzeit -= zeit;
             System.out.println("Die Istzeit beträgt nun: " + minToStunde(istzeit));
         }
-        if (addSub == true){
+        if (addSub == true) {
             istzeit += zeit;
             System.out.println("Die Istzeit beträgt nun: " + minToStunde(istzeit));
         }

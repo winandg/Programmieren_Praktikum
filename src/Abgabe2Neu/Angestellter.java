@@ -1,22 +1,21 @@
 package Abgabe2Neu;
 
-public abstract class Angestellter extends Person{
+public abstract class Angestellter extends Person {
     float stundenlohn;
     int steuerklasse;
     Zeitkonto konto;
 
 
-    public Angestellter(String name, int alter, float stundenlohn,  double steuerklasse, Zeitkonto konto) {
+    public Angestellter(String name, int alter, float stundenlohn, double steuerklasse, Zeitkonto konto) {
         super(name, alter);
         this.stundenlohn = stundenlohn;
         this.konto = konto;
     }
 
 
-
-
     abstract float GetMonatslohn(boolean brutto);
-    Angestellter(){
+
+    Angestellter() {
     /*
     Erstellt die Klasse Angestellter mit folgenden Attributen:
     float stundenlohn
@@ -32,11 +31,12 @@ public abstract class Angestellter extends Person{
     public float getStundenlohn() {
         return stundenlohn;
     }
-/*
-    public int getSteuerklasse() {
-        return steuerklasse;
-    }
-*/
+
+    /*
+        public int getSteuerklasse() {
+            return steuerklasse;
+        }
+    */
     public Zeitkonto getKonto() {
         return konto;
     }

@@ -20,6 +20,7 @@ public class Krankenpfleger extends Angestellter {
         KrankenpflegerSchicht(float indivduellerBonus) {
             this.individuellerBonus = indivduellerBonus;
         }
+
         public float getSchicht() {
             return individuellerBonus;
         }
@@ -30,62 +31,63 @@ public class Krankenpfleger extends Angestellter {
 
         float monatslohn = 0.0f;
         float ueberstunde = konto.istzeit - konto.sollzeit;
-       if(ueberstunde<= 0){
-           ueberstunde = 0;
-       }
-       if(ueberstunde>60){
-           ueberstunde = ueberstunde;
-       }
+        if (ueberstunde <= 0) {
+            ueberstunde = 0;
+        }
+        if (ueberstunde > 60) {
+            ueberstunde = ueberstunde;
+        }
 
         //Uberstunden im Vorfeld bestimmen. Falls möglich
 
 
-        if(brutto==true){
-            if(konto.istzeit > konto.sollzeit){
+        if (brutto == true) {
+            if (konto.istzeit > konto.sollzeit) {
 
-                if(ueberstunde>0) {
+                if (ueberstunde > 0) {
                     monatslohn = ((stundenlohn / 60) * konto.sollzeit + (ueberstunde) * 1.20f) * krankenpflegerSchicht.getSchicht();
-                }else monatslohn = ((stundenlohn / 60) * konto.sollzeit) * krankenpflegerSchicht.getSchicht();
+                } else monatslohn = ((stundenlohn / 60) * konto.sollzeit) * krankenpflegerSchicht.getSchicht();
 
 
             }
-        }if(brutto==false){
-            if (steuerklasse == 0){
+        }
+        if (brutto == false) {
+            if (steuerklasse == 0) {
 
                 //monatslohn = ((stundenlohn / 60) * konto.sollzeit + (ueberstunde) * 1.20f) * rang.getBonusArzt();
-                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde)*1.20f)* krankenpflegerSchicht.getSchicht())*1.0f;
-                return  monatslohn;
+                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde) * 1.20f) * krankenpflegerSchicht.getSchicht()) * 1.0f;
+                return monatslohn;
 
             }
-            if(steuerklasse == 1) {
+            if (steuerklasse == 1) {
 
-                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde)*1.20f)* krankenpflegerSchicht.getSchicht())*0.88f;
-                return  monatslohn;
+                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde) * 1.20f) * krankenpflegerSchicht.getSchicht()) * 0.88f;
+                return monatslohn;
             }
-            if(steuerklasse == 2) {
+            if (steuerklasse == 2) {
 
-                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde)*1.20f)* krankenpflegerSchicht.getSchicht())*0.82f;
-                return  monatslohn;
+                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde) * 1.20f) * krankenpflegerSchicht.getSchicht()) * 0.82f;
+                return monatslohn;
             }
-            if(steuerklasse == 3) {
+            if (steuerklasse == 3) {
 
-                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde)*1.20f)* krankenpflegerSchicht.getSchicht())*0.77f;
-                return  monatslohn;
+                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde) * 1.20f) * krankenpflegerSchicht.getSchicht()) * 0.77f;
+                return monatslohn;
             }
-            if(steuerklasse == 4) {
+            if (steuerklasse == 4) {
 
-                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde)*1.20f)* krankenpflegerSchicht.getSchicht())*0.71f;
-                return  monatslohn;
+                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde) * 1.20f) * krankenpflegerSchicht.getSchicht()) * 0.71f;
+                return monatslohn;
             }
-            if(steuerklasse == 5) {
+            if (steuerklasse == 5) {
 
-                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde)*1.20f)* krankenpflegerSchicht.getSchicht())*0.62f;
-                return  monatslohn;
+                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde) * 1.20f) * krankenpflegerSchicht.getSchicht()) * 0.62f;
+                return monatslohn;
             }
-            if(steuerklasse == 6) {
+            if (steuerklasse == 6) {
 
-                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde)*1.20f)* krankenpflegerSchicht.getSchicht())*0.55f;
-                return  monatslohn;
+                monatslohn = (((stundenlohn / 60) * konto.sollzeit + (ueberstunde) * 1.20f) * krankenpflegerSchicht.getSchicht()) * 0.55f;
+                return monatslohn;
             }
         }
         /*                 monatslohn = ((stundenlohn / 60) * konto.sollzeit + (ueberstunde) * 1.20f) * rang.getBonusArzt();
@@ -110,6 +112,6 @@ public class Krankenpfleger extends Angestellter {
         return 0;
     }
     */
-return 2.0f;
+        return -1.0f;
     }
 }

@@ -17,7 +17,7 @@ public class Personalverwaltung {
     final String EXIT = "/exit";
     final String INFO = "/info";
     final String ANGESTELLTENANLEGEN = "/angestelltenAnlegen";
-    final String PATIENTAENDERN = "/patientAnlegen";
+    final String PATIENTANLEGEN = "/patientAnlegen";
     final String ZIMMERLOESCHEN = "/zimmerLoeschen";
     final String PATIENTENTLASSEN = "/patientEntlassen";
     final String PATIENTVERLEGEN = "/patientVerlegen";
@@ -45,76 +45,82 @@ public class Personalverwaltung {
                     System.out.println("Hier sind alle Befehle aufgelistet: ");
                     System.out.println("/help" + "/exit" + "/info");
                     System.out.println("/angestelltenAnlegen " + "/patientAnlegen" + "/zimmerLoeschen" + "/patientEntlassen" + "/patientVerlegen" + "/zimmerAnlegen" + "/zimmerAnlegen" + "/istZeitAendern" + "/sollZeitAendern" + "/getPatient" + "/getAngestellte");
-                    gelesenerBefehl = "";
                     break;
                 case ZIMMERANLEGEN:
                     zimmerAnlegen();
-                    gelesenerBefehl = "";
                     break;
                 case EXIT:
                     System.out.println("Das Programm wurde beendet.");
                     return;
-                case PATIENTAENDERN: {
+                case PATIENTANLEGEN: {
                     System.out.println("Name: ");
                     String name = eingabe.next();
                     System.out.println("Alter: ");
                     int alter = eingabe.nextInt();
                     System.out.println("GesetzlichVersichert? True/False");
                     boolean gesetzlichVersichert = eingabe.nextBoolean();
-                    System.out.println("Bitte geben sie noch eine gütlige patientenID als ganze Zahl: ");
-                    int patientenID = 0;
-                    boolean patientenIDvorhanden = true;
-                    while (patientenIDvorhanden) {
+
+                    System.out.println("Bitte geben sie noch eine gültige patientenID als ganze Zahl: ");
+                    int patientenID = -1;
+                    boolean patientenIDvorhanden = false;
+                    while (!patientenIDvorhanden) {
                         patientenID = eingabe.nextInt();
                         for (int i = 0; i < personen.size(); i++) {
                             if (personen.get(i) instanceof Patient) {                         //Instanz vom Patienten.
-                                if (((Patient) personen.get(i)).patientenID != patientenID) {
-                                    patientenIDvorhanden = false;
-                                } else System.out.println("Diese PatientenID ist bereits vorhanden...");
+                                if (((Patient) personen.get(i)).patientenID == patientenID) {
+                                    patientenIDvorhanden = true;
+                                }
                             }
+                        }
+                        if (patientenIDvorhanden) {
+                            System.out.println("Diese PatientenID ist bereits vorhanden...");
                         }
                     }
                     Patient neuerPatient = new Patient(name, alter, gesetzlichVersichert, patientenID);
 
-                    int zaehler = 0;
+
+                    boolean zimmergefunden = false;
                     for (int i = 0; i < zimmer.size(); i++) {
-                        if (zimmer.get(i).anzahlFreieBetten > zimmer.get(i).patient.size()) {
+                        if (zimmer.get(i).anzahlBetten > zimmer.get(i).patient.size()) {
                             personen.add(neuerPatient);
                             zimmer.get(i).patient.add(neuerPatient);
-
-                        } else ++zaehler;
+                            zimmergefunden = true;
+                            break;
+                        }
                     }
-                    if (zaehler == zimmer.size()) {
+                    if (!zimmergefunden) {
                         System.out.println("Alle Zimmer sind belegt! Bitte eine neues Zimmer anlegen!");
                     }
                     break;
                 }
-                case ANGESTELLTENANLEGEN:
+                case ANGESTELLTENANLEGEN: {
 
                 /*
                 String name, int alter, float stundenlohn, int steuerklasse, Zeitkonto konto
                  */
                     System.out.println("Arzt = True/Krankenpfleger = False: ");
-                    boolean artDerAnstellung = eingabe.nextBoolean();
-                    if (artDerAnstellung == true) {
+                    boolean istArzt = eingabe.nextBoolean();
+                    System.out.println("Name: ");
+                    String name = eingabe.next();
+                    System.out.println("Alter: ");
+                    int alter = eingabe.nextInt();
+                    System.out.println("Stundenlohn: ");
+                    float stundenlohn = eingabe.nextFloat();
+                    System.out.println("Steuerklasse: ");
+                    int steuerklasse = eingabe.nextInt();
+                    System.out.println("sollZeit: ");
+                    int sollZeit = eingabe.nextInt();
+                    int istZeit = 0;
+
+                    Zeitkonto zeitkonto = new Zeitkonto(istZeit, sollZeit);
+
+                    if (istArzt == true) {
                         //String name, int alter, float stundenlohn, int steuerklasse, Zeitkonto konto, Enum rang
                         /////////////////////////////////////ARZT/////////////////////////////////////////////////
-                        System.out.println("Name: ");
-                        String name = eingabe.next();
-                        System.out.println("Alter: ");
-                        int alter = eingabe.nextInt();
-                        System.out.println("Stundenlohn: ");
-                        float stundenlohn = eingabe.nextFloat();
-                        System.out.println("Steuerklasse: ");
-                        int eingabeSteuerKlasse = eingabe.nextInt();
-                        System.out.println("sollZeit: ");
-                        int sollZeit = eingabe.nextInt();
-                        int istZeit = 0;
 
-                        Zeitkonto kontoArzt = new Zeitkonto(istZeit, sollZeit);
                         System.out.println("Rang: ");
                         int eingabeRang = eingabe.nextInt();
-                        Arzt.Rang rang = Arzt.Rang.AIA;
+                        Arzt.Rang rang;
                         switch (eingabeRang) {
                             case (0):
                                 rang = Arzt.Rang.AIA;
@@ -126,61 +132,59 @@ public class Personalverwaltung {
                                 rang = Arzt.Rang.OBERARZT;
                             case (4):
                                 rang = Arzt.Rang.CHEFARZT;
+                                break;
+                            default:
+                                throw new IllegalStateException("Unerlaubter Rang: " + eingabeRang);
                         }
 
-                        Arzt neuerArzt = new Arzt(name, alter, stundenlohn, eingabeSteuerKlasse, kontoArzt, rang);
+                        Arzt neuerArzt = new Arzt(name, alter, stundenlohn, steuerklasse, zeitkonto, rang);
 
-                        int zaehler = 0;
+                        System.out.println("Im welchem Zimmer soll der Arzt arbeiten?");
+                        int zimmernummer = eingabe.nextInt();
+
+                        boolean zimmergefunden = false;
                         for (int i = 0; i < zimmer.size(); i++) {
-                            if (zimmer.get(i).anzahlFreieBetten > zimmer.get(i).patient.size()) {
+                            if (zimmer.get(i).zimmerNummer == zimmernummer) {
                                 personen.add(neuerArzt);
                                 zimmer.get(i).angestellter.add(neuerArzt);
-
-                            } else ++zaehler;
+                                zimmergefunden = true;
+                                break;
+                            }
                         }
-                        if (zaehler == zimmer.size()) {
-                            System.out.println("Alle Zimmer sind belegt! Bitte eine neues Zimmer anlegen!");
+                        if (!zimmergefunden) {
+                            System.out.println("Zimmernummer " + zimmernummer + " konnte nicht gefunden werden!");
                         }
 
-                    } else if (artDerAnstellung == false) {
+
+                    } else if (istArzt == false) {
                         /////////////////////////////////////////////////KRANKENPFLEGER//////////////////////////////////////////////////
                         //String name, int alter, float stundenlohn, int steuerklasse, Zeitkonto konto
-                        System.out.println("Name: ");
-                        String name = eingabe.next();
-                        System.out.println("Alter: ");
-                        int alter = eingabe.nextInt();
-                        System.out.println("Stundenlohn: ");
-                        float stundenlohn = eingabe.nextFloat();
-                        System.out.println("Steuerklasse: ");
-                        int steuerklasse = eingabe.nextInt();
-                        System.out.println("sollZeit: ");
-                        int sollZeit = eingabe.nextInt();
-                        int istZeit = 0;
 
-                        Zeitkonto konto = new Zeitkonto(sollZeit, istZeit);
-                        Krankenpfleger pfleger = new Krankenpfleger(name, alter, stundenlohn, konto);
+                        Krankenpfleger pfleger = new Krankenpfleger(name, alter, stundenlohn, zeitkonto);
 
-                        int zaehler = 0;
+                        System.out.println("Im welchem Zimmer soll der Arzt arbeiten?");
+                        int zimmernummer = eingabe.nextInt();
+
+                        boolean zimmergefunden = false;
                         for (int i = 0; i < zimmer.size(); i++) {
-                            if (zimmer.get(i).anzahlFreieBetten > zimmer.get(i).patient.size()) {
+                            if (zimmer.get(i).zimmerNummer == zimmernummer) {
                                 personen.add(pfleger);
                                 zimmer.get(i).angestellter.add(pfleger);
-
-                            } else ++zaehler;
+                                zimmergefunden = true;
+                                break;
+                            }
                         }
-                        if (zaehler == zimmer.size()) {
-                            System.out.println("Alle Zimmer sind belegt! Bitte eine neues Zimmer anlegen!");
+                        if (!zimmergefunden) {
+                            System.out.println("Zimmernummer " + zimmernummer + " konnte nicht gefunden werden!");
                         }
                         // wohnheim.angestelltenAnlegen(neuerAngestellter);
                         // Überarbeiten
 
 
                     }
-
-
                     break;
+                }
                 case SOLLZEITAENDERN: {
-
                     System.out.println("Wie heißt die Person?");
                     String name = eingabe.next();
                     System.out.println("Wie viel muss die Person arbeiten?");
@@ -196,7 +200,6 @@ public class Personalverwaltung {
                             }
                         }
                     }
-
 
                     break;
                 }
@@ -220,12 +223,10 @@ public class Personalverwaltung {
                 }
                 case ZIMMERLOESCHEN:
 
-                    System.out.println("Welches Zimmer soll geloescht werden?(ZimmerNummer)");
+                    System.out.println("Welches Zimmer soll gelöscht werden?(ZimmerNummer)");
                     int zimmerNummer = eingabe.nextInt();
                     zimmerLoeschen(zimmerNummer);
                     System.out.println("Das Zimmer befindet sich nicht mehr im System.");
-
-
                     break;
                 case PATIENTENTLASSEN: {
 
@@ -236,13 +237,74 @@ public class Personalverwaltung {
 
                     break;
                 }
-                case PATIENTVERLEGEN:
+                case PATIENTVERLEGEN: {
+                    System.out.println("Welcher Patient soll verlegt werden? (patientenID)");
+                    int patientenID = eingabe.nextInt();
+                    boolean patientIDgefunden = false;
+                    Patient patient = null;
+                    try {
+                        for (int i = 0; i < personen.size(); i++) {
+                            if (personen.get(i) instanceof Patient) {
+                                if (((Patient) personen.get(i)).patientenID == patientenID) {
+                                    patient = (Patient) personen.get(i);
+                                    patientIDgefunden = true;
+                                    if (((Patient) personen.get(i)).istGesetzlichVersichert) {
+                                        throw new IstGesetzlichVersichertException();
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (IstGesetzlichVersichertException e) {
+                        e.printStackTrace();
+                        break;
+                    }
+                    if (!patientIDgefunden) {
+                        System.out.println("Patient mit der ID " + patientenID + " konnte nicht gefunden werden!");
+                        break;
+                    }
+
+                    System.out.println("In welches Zimmer soll der Patient verlegt werden?");
+                    int zimmernummer = eingabe.nextInt();
+                    boolean zimmergefunden = false;
+                    int neuesZimmer = 0;
+                    for (; neuesZimmer < zimmer.size(); neuesZimmer++) {
+                        if (zimmer.get(neuesZimmer).zimmerNummer == zimmernummer) {
+                            zimmer.get(neuesZimmer).patient.add(patient);
+                            zimmergefunden = true;
+                            break;
+                        }
+                    }
+                    if (!zimmergefunden) {
+                        System.out.println("Zimmernummer " + zimmernummer + " konnte nicht gefunden werden");
+                        break;
+                    }
+
+                    if (zimmer.get(neuesZimmer).anzahlBetten < zimmer.get(neuesZimmer).patient.size()) {
+                        System.out.println("Nicht genügend freie Betten verfügbar!");
+                        break;
+                    }
+                    int aktuellesZimmer = 0;
+                    boolean aktuellesZimmergefunden = false;
+                    for (; aktuellesZimmer < zimmer.size(); aktuellesZimmer++) {
+                        for (int k = 0; k < zimmer.get(aktuellesZimmer).patient.size(); k++) {
+                            if (zimmer.get(aktuellesZimmer).patient.get(k).patientenID == patientenID) {
+                                zimmer.get(aktuellesZimmer).patient.remove(patient);
+                                aktuellesZimmergefunden = true;
+                                break;
+                            }
+                        }
+                        if (aktuellesZimmergefunden) {
+                            break;
+                        }
+                    }
 
 
 //zwei for Schleifen// In jedem Zimmer die Patientenlisten durchsuchen//PatientenID
 //for (int i = 0; i < zimmerListe.size(); i++) {
 //                        for (int j = 0; j < zimmerListe.get(i).patientenListe.size(); j++) {
                     break;
+                }
                 case INFO:
 
                     //Methode die alle Informationen in der Konsole ausgibt
@@ -267,10 +329,16 @@ public class Personalverwaltung {
     }
 
     public void patientEntlassen(int patientenID) {
-
-
         //Legt eine Methode an um Patienten zu entlassen.
 
+        for (int i = 0; i < personen.size(); i++) {
+            if (personen.get(i) instanceof Patient) {
+                if (((Patient) personen.get(i)).patientenID == patientenID) {
+                    personen.remove(i);
+                    break;
+                }
+            }
+        }
     }
 
     public void zimmerAnlegen() {
@@ -280,14 +348,14 @@ public class Personalverwaltung {
 
         System.out.println("Zimmernummer: ");
         int zimmernummer = eingabe.nextInt();
-        System.out.println("Anzahl der Freien Betten im jeweilgen Zimmer: ");
+        System.out.println("Anzahl der Freien Betten im jeweiligen Zimmer: ");
         int anzahlBetten = eingabe.nextInt();
 
 
         Zimmer neuesZimmer = new Zimmer(anzahlBetten, zimmernummer);
         zimmer.add(neuesZimmer);
         System.out.println("Folgendes Zimmer wurde nun angelegt: ");
-        System.out.println("Anzahl Betten: " + neuesZimmer.anzahlFreieBetten);
+        System.out.println("Anzahl Betten: " + neuesZimmer.anzahlBetten);
         System.out.println("Zimmernummer: " + neuesZimmer.zimmerNummer);
     }
 
@@ -298,25 +366,12 @@ public class Personalverwaltung {
             if (zimmer.get(i).zimmerNummer == zimmerNummer) {
                 zimmer.remove(i);
                 System.out.println("Das Zimmer mit der Nr :" + zimmerNummer + " wurde geloescht");
+                break;
             }
-            break;
         }
     }
 
-    public void patientAnlegen(Patient neuerPatient) {
 
-        Scanner eingabe = new Scanner(System.in);
-        int zimmerNummer = eingabe.nextInt();
-        Zimmer currentZimmer = new Zimmer(zimmerNummer);
-
-        //currentZimmer.patientAnlegen(neuerPatient);
-
-        System.out.println(neuerPatient.istGesetzlichVersichert);
-        System.out.println(neuerPatient.name);
-        System.out.println(neuerPatient.alter);
-
-
-    }
 
 
 

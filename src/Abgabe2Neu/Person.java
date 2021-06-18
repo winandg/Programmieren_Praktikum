@@ -1,6 +1,6 @@
 package Abgabe2Neu;
 
-public class Person {
+abstract public class Person {
 
 
     String name;
